@@ -1,10 +1,11 @@
-# Welcome to your CDK TypeScript project!
+Developer.ioの日次フィードをスラックに毎日送信する　
 
-This is a blank project for TypeScript development with CDK.
-
-The `cdk.json` file tells the CDK Toolkit how to execute your app.
-
-## Useful commands
+- CDK
+    - ECS
+    - codepipeline
+- docker
+    - Go
+## CDK Commands
 
  * `npm run build`   compile typescript to js
  * `npm run watch`   watch for changes and compile
