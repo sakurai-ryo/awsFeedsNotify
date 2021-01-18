@@ -1,0 +1,24 @@
+version: 0.2
+
+phases:
+  pre_build:
+    commands:
+      ## ECRにログイン
+      - $(aws ecr get-login --no-include-email --region $AWS_DEFAULT_REGION)
+
+      ## Dockerイメージのタグとして使用するため、Gitのコミットハッシュを取得
+      - IMAGE_TAG=$CODEBUILD_RESOLVED_SOURCE_VERSION
+  build:
+    commands:
+      ## Dockerイメージのビルド
+      - docker build -t $IMAGE_REPOSITORY_NAME:$IMAGE_TAG .
+
+      ## DockerイメージのECRへのプッシュ
+      - docker push $IMAGE_REPOSITORY_NAME:$IMAGE_TAG
+
+      ## ECS+CodeDeployにどのイメージを使用するか指示するためのファイルを作成
+      - printf '{"Version":"1.0","ImageURI":"%s"}' $IMAGE_REPOSITORY_NAME:$IMAGE_TAG > imageDetail.json
+
+artifacts:
+  ## buildの最後で作成したファイルをアーティファクトとして流す
+  files: imageDetail.json
